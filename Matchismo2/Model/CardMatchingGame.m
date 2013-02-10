@@ -12,7 +12,6 @@
 @property (strong,nonatomic) NSMutableArray *cards;
 @property (nonatomic,readwrite) int score;
 @property (nonatomic,readwrite) int lastScore;
-@property (nonatomic,readwrite) int cycleCount;
 @property (nonatomic,readwrite) NSMutableArray *lastFlippedCards;
 
 @property (nonatomic) int gameMode; //2-card-match-mode ;3-card-match-mode
@@ -43,7 +42,6 @@
 {
     self = [super init];
     self.gameMode=gameMode;
-    self.cycleCount=2;
     if(self){
         for (int i=0;i<cardCount;i++){
             Card *card=[deck drawRandomCard];

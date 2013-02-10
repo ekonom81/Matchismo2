@@ -10,10 +10,11 @@
 #import "PlayingCardDeck.h"
 #import "CardMatchingGame.h"
 
+#define GAME_MODE 2 //match 2 cards
+
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (nonatomic) int flipCount;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentUI;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong,nonatomic) CardMatchingGame *game;
@@ -22,12 +23,6 @@
 @end
 
 @implementation CardGameViewController
-- (IBAction)gameModeSegmented:(UISegmentedControl *)sender
-{
-    self.game=nil;
-    [self updateUI];
-    
-}
 
 -(UIImage *)cardBackImage
 {
@@ -41,7 +36,7 @@
 {
     if(!_game)_game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
                                                         usingDeck:[[PlayingCardDeck alloc]init]
-                                                         gameMode:self.gameModeSegmentUI.selectedSegmentIndex+2];
+                                                         gameMode:GAME_MODE];
 
     return _game;
 }
@@ -62,7 +57,6 @@
         cardButton.selected = card.isFaceUp;
         cardButton.enabled =!card.isUnplayable;
         cardButton.alpha =card.isUnplayable? 0.3:1.0;
-        //[cardButton setTitle:card.contents forState:UIControlStateNormal];
         [cardButton setImageEdgeInsets:UIEdgeInsetsMake(1,-1,-1,-1)];
         if(!card.isFaceUp)
             [cardButton setImage: self.cardBackImage forState:UIControlStateNormal];
@@ -75,7 +69,7 @@
 }
 
 - (IBAction)Deal:(UIButton *)sender {
-    self.gameModeSegmentUI.enabled=YES;
+    
     self.game=nil;
     self.flipCount=0;
     [self updateUI];
@@ -88,7 +82,7 @@
 }
 
 - (IBAction)flipCard:(UIButton *)sender {
-    self.gameModeSegmentUI.enabled=NO;
+
     [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
     self.flipCount++;
     
@@ -113,7 +107,6 @@
         if(cardMatchingGame.lastScore>0)
         {
             [resultArrayStr addObject:@"Matched "];
-            //if(self.gameModeSegmentUI.selectedSegmentIndex==0&&cardMatchingGame.lastFlippedCards.count>1){
             for(Card *card in cardMatchingGame.lastFlippedCards){
                 [resultArrayStr addObject:card.contents];
                 [resultArrayStr addObject:@" & "];

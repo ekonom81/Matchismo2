@@ -24,6 +24,7 @@
 		9C0E5A7A16BF0D17004F5A92 /* PlayingCardDeck.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E5A7916BF0D17004F5A92 /* PlayingCardDeck.m */; };
 		9C0E5A7D16BF1992004F5A92 /* CardMatchingGame.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E5A7C16BF1992004F5A92 /* CardMatchingGame.m */; };
 		9C34EA2A16C441D800F6C29A /* CardBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C34EA2916C441D800F6C29A /* CardBack.png */; };
+		9C8B8EBA16C84E3F00A17747 /* CardSetGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C8B8EB916C84E3F00A17747 /* CardSetGameViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,8 @@
 		9C0E5A7B16BF1992004F5A92 /* CardMatchingGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardMatchingGame.h; path = Matchismo2/Model/CardMatchingGame.h; sourceTree = "<group>"; };
 		9C0E5A7C16BF1992004F5A92 /* CardMatchingGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CardMatchingGame.m; path = Matchismo2/Model/CardMatchingGame.m; sourceTree = "<group>"; };
 		9C34EA2916C441D800F6C29A /* CardBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBack.png; sourceTree = "<group>"; };
+		9C8B8EB816C84E3F00A17747 /* CardSetGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardSetGameViewController.h; sourceTree = "<group>"; };
+		9C8B8EB916C84E3F00A17747 /* CardSetGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardSetGameViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +110,8 @@
 				9C0E5A6016BEFD3F004F5A92 /* MainStoryboard.storyboard */,
 				9C0E5A6316BEFD3F004F5A92 /* CardGameViewController.h */,
 				9C0E5A6416BEFD3F004F5A92 /* CardGameViewController.m */,
+				9C8B8EB816C84E3F00A17747 /* CardSetGameViewController.h */,
+				9C8B8EB916C84E3F00A17747 /* CardSetGameViewController.m */,
 				9C0E5A4F16BEFD3F004F5A92 /* Supporting Files */,
 			);
 			name = Matchismo;
@@ -220,6 +225,7 @@
 				9C0E5A7716BF08FB004F5A92 /* PlayingCard.m in Sources */,
 				9C0E5A7A16BF0D17004F5A92 /* PlayingCardDeck.m in Sources */,
 				9C0E5A7D16BF1992004F5A92 /* CardMatchingGame.m in Sources */,
+				9C8B8EBA16C84E3F00A17747 /* CardSetGameViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
