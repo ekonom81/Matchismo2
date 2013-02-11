@@ -9,6 +9,7 @@
 #import "CardSetGameViewController.h"
 #import "PlayingCardDeck.h"
 #import "CardMatchingGame.h"
+#import "PlayingSetCardDeck.h"
 
 #define GAME_MODE 3 //match 3 cards
 
@@ -24,7 +25,7 @@
 -(CardMatchingGame *)game
 {
     if(!_game)_game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
-                                                        usingDeck:[[PlayingCardDeck alloc]init]
+                                                        usingDeck:[[PlayingSetCardDeck alloc]init]
                                                          gameMode:GAME_MODE];
     
     return _game;
@@ -41,6 +42,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+  
 	// Do any additional setup after loading the view.
 }
 
