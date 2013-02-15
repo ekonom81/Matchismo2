@@ -1,72 +1,88 @@
 //
-//  CardGameViewController.m
+//  PlayingCardViewController.m
 //  Matchismo
 //
-//  Created by Marcin Ekonomiuk on 03.02.2013.
+//  Created by Marcin Ekonomiuk on 15.02.2013.
 //  Copyright (c) 2013 CS193p. All rights reserved.
 //
 
 #import "CardGameViewController.h"
-#import "PlayingCardDeck.h"
-#import "CardMatchingGame.h"
-
-#define GAME_MODE 2 //match 2 cards
 
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (nonatomic) int flipCount;
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (strong,nonatomic) CardMatchingGame *game;
-@property (weak, nonatomic) IBOutlet UILabel *lastFlipResultLabel;
-@property (weak,nonatomic) UIImage *cardBackImage;
+@property (weak,nonatomic) IBOutlet UILabel *lastFippedResultLabel;
+
 @end
 
 @implementation CardGameViewController
 
--(UIImage *)cardBackImage
+- (void)viewDidLoad
 {
-    if(!_cardBackImage){
-        _cardBackImage = [UIImage imageNamed:@"CardBack.png"];
-    }
-    return _cardBackImage;
+    [super viewDidLoad];
+    [self updateUI];
 }
-
--(CardMatchingGame *)game
+-(void)setFlipCount:(int)flipCount
 {
-    if(!_game)_game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
-                                                        usingDeck:[[PlayingCardDeck alloc]init]
-                                                         gameMode:GAME_MODE];
-
-    return _game;
+    _flipCount=flipCount;
 }
 
 -(void)setCardButtons:(NSArray *)cardButtons
 {
-    _cardButtons = cardButtons;
+    _cardButtons=cardButtons;
     [self updateUI];
-    
 }
 
--(void)updateUI
+-(NSAttributedString *)lastFlipResult:(CardMatchingGame *)cardMatchingGame
 {
-    for(UIButton *cardButton in self.cardButtons){
-        Card *card=[self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-        [cardButton setTitle:card.contents forState:UIControlStateSelected];
-        [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-        cardButton.selected = card.isFaceUp;
-        cardButton.enabled =!card.isUnplayable;
-        cardButton.alpha =card.isUnplayable? 0.3:1.0;
-        [cardButton setImageEdgeInsets:UIEdgeInsetsMake(1,-1,-1,-1)];
-        if(!card.isFaceUp)
-            [cardButton setImage: self.cardBackImage forState:UIControlStateNormal];
-        else
-         [cardButton setImage: nil forState:UIControlStateNormal];
-     
+    NSString *result=@"";
+  
+    NSMutableAttributedString *mat;
+   
+    if(cardMatchingGame.lastScore ==(0-FLIP_COST)){
+        
+        Card *lastFlippedCard=[cardMatchingGame.lastFlippedCards lastObject];
+        if(lastFlippedCard!=nil){
+            result = [NSString stringWithFormat:@"Flipped up "];
+            mat=[[NSMutableAttributedString alloc]initWithString:result];
+            
+           [mat appendAttributedString:[self getAttributedCardContents:lastFlippedCard]];
+            
+            return mat;
+        }
     }
-    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
-    self.lastFlipResultLabel.text = [self lastFlipResult:self.game];
+    else
+        if(cardMatchingGame.lastScore>0)
+        {
+            mat = [[NSMutableAttributedString alloc]init];
+            NSMutableAttributedString *matPom = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
+            [mat appendAttributedString:matPom];
+            for(Card *card in cardMatchingGame.lastFlippedCards){
+                [mat appendAttributedString:[self getAttributedCardContents:card]];
+                if([cardMatchingGame.lastFlippedCards lastObject]!= card)
+                     [mat appendAttributedString:[matPom initWithString:@" & "]];
+                
+            }
+            [mat appendAttributedString:[matPom initWithString:[NSString stringWithFormat:@" for %d points",cardMatchingGame.lastScore]]];
+        }else if(cardMatchingGame.lastScore<0)
+        {
+            mat = [[NSMutableAttributedString alloc]init];
+            NSMutableAttributedString *matPom =[[NSMutableAttributedString alloc]init];
+            for(Card *card in cardMatchingGame.lastFlippedCards){
+                [mat appendAttributedString:[self getAttributedCardContents:card]];
+                if([cardMatchingGame.lastFlippedCards lastObject]!=card)
+                    [mat appendAttributedString:[matPom initWithString:@" & "]];
+               
+            }
+            [mat appendAttributedString:[matPom initWithString:[NSString stringWithFormat:@" don't match! %d points",cardMatchingGame.lastScore]]];
+        }
+    
+    return mat;
 }
+
 
 - (IBAction)Deal:(UIButton *)sender {
     
@@ -75,54 +91,34 @@
     [self updateUI];
 }
 
--(void)setFlipCount:(int)flipCount
-{
-    _flipCount=flipCount;
-    self.flipsLabel.text = [NSString stringWithFormat:@"Flips : %d",self.flipCount];
-}
-
 - (IBAction)flipCard:(UIButton *)sender {
-
+    
     [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
     self.flipCount++;
     
     [self updateUI];
 }
 
--(NSString *)lastFlipResult:(CardMatchingGame *)cardMatchingGame
+-(void)startGame:(CardMatchingGame *)game
 {
-    NSString *result=@"";
-    NSMutableArray *resultArrayStr = [[NSMutableArray alloc]init];
+    _game=game;
     
-    if(cardMatchingGame.lastScore ==(0-FLIP_COST)){
-        
-        Card *lastFlippedCard=[cardMatchingGame.lastFlippedCards lastObject];
-        if(lastFlippedCard!=nil){
-           
-            result = [NSString stringWithFormat:@"Flipped up %@",lastFlippedCard];
-            return result;
-        }
-    }
-    else
-        if(cardMatchingGame.lastScore>0)
-        {
-            [resultArrayStr addObject:@"Matched "];
-            for(Card *card in cardMatchingGame.lastFlippedCards){
-                [resultArrayStr addObject:card.contents];
-                [resultArrayStr addObject:@" & "];
-            }
-            [resultArrayStr removeLastObject];
-            [resultArrayStr addObject:[NSString stringWithFormat:@" for %d points",cardMatchingGame.lastScore]];
-        }else if(cardMatchingGame.lastScore<0)
-            {
-                for(Card *card in cardMatchingGame.lastFlippedCards){
-                    [resultArrayStr addObject:card.contents];
-                    [resultArrayStr addObject:@" & "];
-                }
-                [resultArrayStr removeLastObject];
-                [resultArrayStr addObject:[NSString stringWithFormat:@" don't match! %d points",cardMatchingGame.lastScore]];
-            }
-    
-    return [resultArrayStr componentsJoinedByString:@" "];
 }
+-(CardMatchingGame *)currentGame
+{
+    return _game;
+}
+
+-(void) updateUI
+{
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",_game.score];
+    self.flipsLabel.text = [NSString stringWithFormat:@"Flips : %d",self.flipCount];
+    self.lastFippedResultLabel.attributedText = [self lastFlipResult:self.game];
+}
+
+-(NSAttributedString *) getAttributedCardContents: (Card *)card{
+    [ NSException raise:@"Abstract method" format:@"Abstract method"];
+    return nil;
+}
+
 @end

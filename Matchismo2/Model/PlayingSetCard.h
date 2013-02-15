@@ -10,7 +10,7 @@
 
 @interface PlayingSetCard : PlayingCard
 @property(nonatomic,strong) NSString *color;    //value with name of color
-@property(nonatomic,strong) NSString *shading;  //value with alpha number
+@property(nonatomic) NSString *shading;  //value with alpha number
 
 + (NSArray *)validColors;
 + (NSArray *)validShadings;
